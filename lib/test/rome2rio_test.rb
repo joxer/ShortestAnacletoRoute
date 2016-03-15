@@ -23,4 +23,14 @@ class TestRome2Rio < Test::Unit::TestCase
     result = Rome2Rio.get_from_a_to_b("Nalalala", "Kalalala") #two dummiees city
     assert_equal(result.empty?,true)
   end
+
+  def test_ok_escape
+    result = Rome2Rio.get_from_a_to_b("New York", "Kuala Lampur") #two dummiees city
+    assert_equal(result.empty?,false)
+  end
+
+  def test_train_exist
+    result = Rome2Rio.get_from_a_to_b("Rome", "Milan")
+    assert_not_equal(result.transports['train'],[])
+  end
 end

@@ -9,33 +9,32 @@ class Rome2Rio
   @@base_url = "https://rome2rio12.p.mashape.com"
 
   def self.get_from_a_to_b(a_point,b_point)
-    do_request_from_a_to_b(a_point,b_point)
-    return Rome2Rio.parse_result(@cache)
+    res = do_request_from_a_to_b(a_point,b_point)
+    return Rome2Rio.parse_result(res)
   end
 
 private
   def self.do_request_from_a_to_b(a_point, b_point)
 
-    if @cache == nil
+      result = {}
       url = URI.parse(@@base_url)
 
-      req = Net::HTTP::Get.new("/Search?oName=#{a_point}&dName=#{b_point}")
+      req = Net::HTTP::Get.new("/Search?oName=#{URI.escape(a_point)}&dName=#{URI.escape(b_point)}")
       req.add_field("X-Mashape-Key", @@mashape_key)
       req["accept"] = 'application/json'
       req["content-type"] = 'application/json'
       res = Net::HTTP.start(url.host, 443, :use_ssl => true) do |http|
         http.request(req)
       end
+
       begin
-        
-        @cache = JSON.parse(res.body)
+        result = JSON.parse(res.body)
       rescue Exception => e
-
-        @cache = {}
+      #  puts e.message
+      #  puts e.backtrace.inspect
       end
-    end
 
-    @cache
+    result
   end
 
   def self.parse_result(json)
@@ -46,21 +45,40 @@ private
       point_a = json['places'][0]
       point_b = json['places'][1]
 
+
+
       result.start = point_a
       result.end = point_b
 
       routes = json['routes'].map  do |route|
+        travel_way = self.getTravelRoute(route['name'])
+
+
+        if (travel_way == :flight || travel_way == :bus || travel_way == :train)
         result.add_transport(
-        route['segments'][0]['kind'].to_sym,
+        travel_way,
         route['duration'].to_i,
         route['indicativePrice']['price'].to_i
         )
+        end
+
       end
     else
       result = Rome2RioResult::Dummy.new
     end
 
     return result
+  end
+
+  def self.getTravelRoute(name)
+
+    if name =~ /Fly/
+      :flight
+    elsif name =~ /Bus/
+      :bus
+    elsif name =~ /Train/
+      :train
+    end
   end
 end
 
@@ -89,7 +107,11 @@ class Rome2RioResult
   end
 
   def empty?
-    true if(@start == nil || @end == nil)
+    if(@start == nil || @end == nil)
+      true
+    else
+      false
+    end
   end
 
   def to_s
