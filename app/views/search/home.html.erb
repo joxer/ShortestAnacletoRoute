@@ -1,0 +1,33 @@
+<div ng-app="SearchRoute" ng-controller="SearchCtrl" class="container" id="main-div">
+
+  <div class="row">
+    <div class="column ">
+
+      <div id="main-title">
+        Search From A to B!
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="column column-50 center"><label>Search A</label>
+      <input type="text" class="input-blue" id="point_a">
+    </div>
+    <div class="column column-50  center"><label>Search B</label>
+      <input type="text" class="input-blue" id="point_b">
+    </div>
+  </div>
+  <div class="row">
+    <div class="column   center">
+      <button class="button-blue button-large" ng-click="searchForAB()" id="button_send">Send Request</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column" id="result_div">
+
+    </div>
+  </div>
+
+</div>
