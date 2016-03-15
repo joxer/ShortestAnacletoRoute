@@ -8,6 +8,11 @@
   margin-top:20px;
 }
 
+#main-title img {
+ vertical-align: -20px;
+}
+
+
 
 .center {
 
@@ -22,10 +27,10 @@ body {
    color:#f0f0f0;
 }
 
-
 #main-div {
-  height:100%;
-  background-color: rgba(25, 25,25, 0.5);;
+  margin-top:5vh;
+  height:90vh;
+  background-color: rgba(25, 25,25, 0.3);;
 }
 
 .input-blue {
@@ -42,4 +47,12 @@ box-shadow: rgba(30, 135, 227, 0.9) !important;
 
   background-color: rgba(30, 135, 227, 0.9);
   border-color: rgba(30, 135, 227, 0.6);
+}
+
+#result_div {
+
+  background-color: rgba(25,25,25,0.8);
+  box-shadow: 0px 0px 2px #888;
+
+
 }
