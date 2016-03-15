@@ -42,7 +42,7 @@ angular.module('SearchRoute', [])
       console.log(error);
     })
   }
-}]).directive("travelList", function( $compile){
+}]).directive("travelList", ["$compile",function( $compile){
 
   return {
     restrict: "AE",
@@ -68,4 +68,4 @@ angular.module('SearchRoute', [])
 
     }
   }
-})
+}])
