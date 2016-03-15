@@ -5,31 +5,32 @@ require 'json'
 class Rome2Rio
   #Interface for the website
 
-  def initialize
-    @@mashape_key = "7gYkYKTqNimshnPyF5nEKlxPllg0p152znzjsnNWxK9znWFGgS"
-    @@base_url = "https://rome2rio12.p.mashape.com"
-  end
+  @@mashape_key = "7gYkYKTqNimshnPyF5nEKlxPllg0p152znzjsnNWxK9znWFGgS"
+  @@base_url = "https://rome2rio12.p.mashape.com"
 
-  def get_from_a_to_b(a_point,b_point)
+  def self.get_from_a_to_b(a_point,b_point)
     do_request_from_a_to_b(a_point,b_point)
     return Rome2Rio.parse_result(@cache)
   end
 
-  def do_request_from_a_to_b(a_point, b_point)
+private
+  def self.do_request_from_a_to_b(a_point, b_point)
 
     if @cache == nil
       url = URI.parse(@@base_url)
 
       req = Net::HTTP::Get.new("/Search?oName=#{a_point}&dName=#{b_point}")
-      req.add_field("X-Mashape-Key", "7gYkYKTqNimshnPyF5nEKlxPllg0p152znzjsnNWxK9znWFGgS")
+      req.add_field("X-Mashape-Key", @@mashape_key)
       req["accept"] = 'application/json'
       req["content-type"] = 'application/json'
       res = Net::HTTP.start(url.host, 443, :use_ssl => true) do |http|
         http.request(req)
       end
       begin
+        
         @cache = JSON.parse(res.body)
-      rescue
+      rescue Exception => e
+
         @cache = {}
       end
     end
@@ -89,5 +90,9 @@ class Rome2RioResult
 
   def empty?
     true if(@start == nil || @end == nil)
-  end  
+  end
+
+  def to_s
+    "#{@start} - #{@end} "
+  end
 end
