@@ -5,9 +5,16 @@ class Route < ApplicationRecord
     validates_presence_of :end
 
     def to_json
-      return {start: JSON.parse(self.full_start),
+      return to_h.to_json
+    end
+
+    def to_h
+      return {
+
+              start: JSON.parse(self.full_start),
               end: JSON.parse(self.full_end),
               transports: JSON.parse(self.cache)
-             }.to_json
+            }
+
     end
 end

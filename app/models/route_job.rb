@@ -1,0 +1,3 @@
+class RouteJob < ApplicationRecord
+
+end
