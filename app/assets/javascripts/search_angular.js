@@ -15,7 +15,10 @@ angular.module('SearchRoute', [])
 
 
     resultDiv.html("<center>Loading...</center>");
-
+    if(input1 == "" || input2 == ""){
+      resultDiv.html("<center>Insert two valid input</center>")
+    }
+    else{
     requesterHttp.getRoute(input1,input2).then(function(data){
 
       if(data.result == "true"){
@@ -37,6 +40,7 @@ angular.module('SearchRoute', [])
       }
 
     })
+  }
   }
 
   $scope.waitForId = function(wait_id){
@@ -155,7 +159,7 @@ angular.module('SearchRoute', [])
           $(elem).find("#table-body").append("<tr>"+
           "<td>"+key+"</td>"+
           "<td> "+parseMinutes(transports[key].duration)+"</td>"
-          +"<td>"+transports[key].price+"</td></tr>")
+          +"<td>"+transports[key].price+"$</td></tr>")
 
         }
       }

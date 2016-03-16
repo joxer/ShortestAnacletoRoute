@@ -1,11 +1,1 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  job_id: MyString
-  result: false
-  route: one
-
-two:
-  job_id: MyString
-  result: false
-  route: two

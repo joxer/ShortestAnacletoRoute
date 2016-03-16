@@ -33,16 +33,23 @@ class RouteTest < ActiveSupport::TestCase
    end
 
    test 'get Result from A and B and train should exist' do
-
      result = Tool.get_result("Rome", "Milan")
      assert_not_equal(JSON.parse(result[0].cache)["train"], {})
    end
 
    test 'see if avg method is correct!' do
-
     transports = routes(:RomeMilan).route_transports.all.map { |value| {duration: value.duration, price: value.price, type: value.route_type.to_sym} }.delete_if {|value| value[:type] == "else"}
     cache = JSON.parse(routes(:RomeMilan).cache, :symbolize_names => true)
     avg = Tool.calculate_media(transports)
     assert_equal(avg , cache)
    end
+
+   test 'get result from Milan to Rome and see if api data is similar to fixtures data' do
+
+     romemilan = routes(:RomeMilan)
+     result, routes = Tool.get_result("Rome", "Milan")
+     assert_equal(romemilan.start, "Rome")
+     assert_equal(romemilan.end, "Milan")
+     assert_equal(romemilan.cache, result.cache)
+  end
 end

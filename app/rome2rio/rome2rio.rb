@@ -29,12 +29,7 @@ module Rome2Rio
       begin
         result = JSON.parse(res.body)
       rescue Exception => e
-
-
         Rails.logger.error("Rome2Rio error: can't find place between #{a_point} - #{b_point} with error: #{e.message}")
-
-        #  puts e.message
-        #  puts e.backtrace.inspect
       end
 
       return result
@@ -48,17 +43,12 @@ module Rome2Rio
       res = WebCall.get_from_a_to_b(point_a,point_b)
 
       if res != {} && res != nil
+        new_route = Route.new(start: point_a, end:point_b,
+        full_start: res["places"][0].to_json,
+        full_end: res["places"][1].to_json)
 
-        new_route = Route.new(start: point_a, end:point_b, full_start: res["places"][0].to_json, full_end: res["places"][1].to_json)
 
-
-        routes = res["routes"].map do |route|
-          duration = route["duration"].to_i
-          type = self.get_type_of_route(route["name"])
-          price = route["indicativePrice"]["price"].to_i
-
-          {duration: duration ,type:type, price: price}
-        end
+        routes = parse_route_from_json(res['routes'])
 
         transports_media = self.calculate_media(routes)
         new_route.cache = JSON.generate(transports_media)
@@ -69,11 +59,13 @@ module Rome2Rio
       end
     end
 
+
     def self.get_result_and_save_to_DB(point_a,point_b)
       new_route, routes = self.get_result(point_a, point_b)
       self.save_to_DB(new_route,routes)
       new_route
     end
+
     def self.save_to_DB(new_route, routes)
       begin
         if(new_route != nil)
@@ -128,5 +120,15 @@ module Rome2Rio
       transports
     end
 
+
+    def self.parse_route_from_json(res)
+
+      return res.map do |route|
+        duration = route["duration"].to_i
+        type = self.get_type_of_route(route["name"])
+        price = route["indicativePrice"]["price"].to_i
+        {duration: duration ,type:type, price: price}
+      end
+    end
   end
 end
