@@ -13,7 +13,9 @@ class SearchPlaceJob < ApplicationJob
     end
 
   rescue Exception => e
-    p e
+    Rails.logger.error("Error in job! #{e}")
+  ensure
+      ActiveRecord::Base.connection.close
   end
   end
 end
