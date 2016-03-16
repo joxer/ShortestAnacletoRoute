@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'search/:start_path/:end_path', to: 'search#search_route'
   get 'search/home', to: 'search#home'
+  get 'search/get_result', to: 'search#get_result'
 
   root 'search#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

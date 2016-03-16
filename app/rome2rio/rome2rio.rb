@@ -29,6 +29,10 @@ module Rome2Rio
       begin
         result = JSON.parse(res.body)
       rescue Exception => e
+
+
+        Rails.logger.error("Rome2Rio error: can't find place between #{a_point} - #{b_point} with error: #{e.message}")
+
         #  puts e.message
         #  puts e.backtrace.inspect
       end
@@ -123,6 +127,6 @@ module Rome2Rio
       end
       transports
     end
-    
+
   end
 end

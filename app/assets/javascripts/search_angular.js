@@ -13,29 +13,84 @@ angular.module('SearchRoute', [])
 
     var resultDiv = angular.element(document.querySelector("#result_div"))
 
+
     resultDiv.html("<center>Loading...</center>");
 
     requesterHttp.getRoute(input1,input2).then(function(data){
 
-      resultDiv.html("")
+      if(data.result == "true"){
+        $scope.currentTravelData = data
+        $scope.renderDataFromRequest()
+      }else if(data.result=="false"){
 
-      $scope.currentTravelData = data
-      if(jQuery.isEmptyObject(data.transports)){
+              resultDiv.html("Cannot find any data!")
+              resultDiv.css("padding", "20px")
+              resultDiv.css("text-align","center")
+      }
 
-        resultDiv.html("Cannot find any data!")
-        resultDiv.css("padding", "20px")
-        resultDiv.css("text-align","center")
+      else{
+        setTimeout(
+          function(){
+            $scope.waitForId(data.id)
+      }
+        , 1000)
+      }
+
+    })
+  }
+
+  $scope.waitForId = function(wait_id){
+
+
+    requesterHttp.getResultFromWaitId(wait_id).then(function(data){
+
+      if(data.result == "true"){
+        console.log(data)
+        $scope.currentTravelData = data
+        $scope.renderDataFromRequest()
+      }else if(data.result=="false"){
+        var resultDiv = angular.element(document.querySelector("#result_div"))
+
+              resultDiv.html("Cannot find any data!")
+              resultDiv.css("padding", "20px")
+              resultDiv.css("text-align","center")
       }
       else{
-
-
-        var nnelement = angular.element(document.createElement("travel-list"));
-
-        var el = $compile(nnelement)($scope);
-        resultDiv.append(el);
-
+        console.log(data)
+        setTimeout(
+          function(){
+            $scope.waitForId(wait_id)
       }
+        , 1000)
+      }
+
     })
+  }
+
+  $scope.renderDataFromRequest = function(){
+
+
+
+    var resultDiv = angular.element(document.querySelector("#result_div"))
+
+
+    resultDiv.html("")
+    if(jQuery.isEmptyObject($scope.currentTravelData.transports)){
+
+      resultDiv.html("Cannot find any data!")
+      resultDiv.css("padding", "20px")
+      resultDiv.css("text-align","center")
+    }
+    else{
+
+
+      var nnelement = angular.element(document.createElement("travel-list"));
+
+      var el = $compile(nnelement)($scope);
+      resultDiv.append(el);
+
+    }
+
   }
 
   init();
@@ -47,6 +102,19 @@ angular.module('SearchRoute', [])
     var request = $http({
       method: "get",
       url: "/search/"+point_a+"/"+point_b
+    })
+    return request.then(function(data){
+      return data.data;
+    }, function(error){
+      console.log(error);
+    })
+  }
+
+  this.getResultFromWaitId = function(wait_id, point_b){
+
+    var request = $http({
+      method: "get",
+      url: "/search/get_result?id="+wait_id
     })
     return request.then(function(data){
       return data.data;
@@ -73,8 +141,8 @@ angular.module('SearchRoute', [])
     replace:true,
     scope: false,
     template: "<table id='travelList'> "+
-       " <thead><tr><th>Kind of travel</th><th> Duration</th><th>Price</th></tr>  </thead>"+
-       "<tbody id='table-body'>  </body>  </table>",
+    " <thead><tr><th>Kind of travel</th><th> Duration</th><th>Price</th></tr>  </thead>"+
+    "<tbody id='table-body'>  </body>  </table>",
 
     scope: false,
 
@@ -85,9 +153,9 @@ angular.module('SearchRoute', [])
         if (transports.hasOwnProperty(key)) {
 
           $(elem).find("#table-body").append("<tr>"+
-                                                  "<td>"+key+"</td>"+
-                                                  "<td> "+parseMinutes(transports[key].duration)+"</td>"
-                                                  +"<td>"+transports[key].price+"</td></tr>")
+          "<td>"+key+"</td>"+
+          "<td> "+parseMinutes(transports[key].duration)+"</td>"
+          +"<td>"+transports[key].price+"</td></tr>")
 
         }
       }
