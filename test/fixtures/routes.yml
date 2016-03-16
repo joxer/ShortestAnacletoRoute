@@ -1,13 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  start: MyString
-  end: MyString
-  cache: MyText
-  delta: 2016-03-15 10:14:52
-
-two:
-  start: MyString
-  end: MyString
-  cache: MyText
-  delta: 2016-03-15 10:14:52
+RomeMilan:
+    id: 1
+    start: Rome
+    end: Milan
+    cache: "{\"train\":{\"price\":66,\"duration\":274},\"bus\":{\"price\":72,\"duration\":644},\"plane\":{\"price\":97,\"duration\":261}}"
+    full_start: "{\"kind\":\"capital\",\"name\":\"Rome\",\"longName\":\"Rome, Italy\",\"pos\":\"41.89052,12.49425\",\"code\":\"ROM\",\"countryCode\":\"IT\",\"regionCode\":\"62\"}"
+    full_end: "{\"kind\":\"city\",\"name\":\"Milan\",\"longName\":\"Milan, Italy\",\"pos\":\"45.4641,9.18852\",\"code\":\"MIL\",\"countryCode\":\"IT\",\"regionCode\":\"25\"}"

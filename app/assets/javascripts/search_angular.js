@@ -11,19 +11,31 @@ angular.module('SearchRoute', [])
     var input1 = angular.element(document.querySelector("#point_a")).val();
     var input2 = angular.element(document.querySelector("#point_b")).val();
 
+    var resultDiv = angular.element(document.querySelector("#result_div"))
+
+    resultDiv.html("<center>Loading...</center>");
+
     requesterHttp.getRoute(input1,input2).then(function(data){
 
-      $scope.currentTravelData = data
-
-      var resultDiv = angular.element(document.querySelector("#result_div"))
       resultDiv.html("")
-      var nnelement = angular.element(document.createElement("travel-list"));
 
-       var el = $compile(nnelement)($scope);
-       resultDiv.append(el);
+      $scope.currentTravelData = data
+      if(jQuery.isEmptyObject(data.transports)){
 
+        resultDiv.html("Cannot find any data!")
+        resultDiv.css("padding", "20px")
+        resultDiv.css("text-align","center")
+      }
+      else{
+
+
+        var nnelement = angular.element(document.createElement("travel-list"));
+
+        var el = $compile(nnelement)($scope);
+        resultDiv.append(el);
+
+      }
     })
-
   }
 
   init();
@@ -44,6 +56,18 @@ angular.module('SearchRoute', [])
   }
 }]).directive("travelList", ["$compile",function( $compile){
 
+  function parseMinutes(x){hours=Math.floor(x/60); minutes=x% 60;
+    if(hours > 0){
+      return hours+" Hours and "+minutes+" Minutes"
+    }
+    else if(minutes == 0){
+      return hours+"Hours"
+    }
+    else{
+      return minutes+" Minutes"
+    }
+  }
+
   return {
     restrict: "AE",
     replace:true,
@@ -56,16 +80,19 @@ angular.module('SearchRoute', [])
 
     link: function(scope, elem, attrs){
       var transports = scope.currentTravelData.transports;
+
       for (var key in transports) {
         if (transports.hasOwnProperty(key)) {
+
           $(elem).find("#table-body").append("<tr>"+
                                                   "<td>"+key+"</td>"+
-                                                  "<td>"+parseInt(transports[key].duration/60)+":"+transports[key].duration%60+"</td>"
+                                                  "<td> "+parseMinutes(transports[key].duration)+"</td>"
                                                   +"<td>"+transports[key].price+"</td></tr>")
 
         }
       }
 
     }
+
   }
 }])
