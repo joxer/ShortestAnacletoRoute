@@ -1,0 +1,58 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+
+rm1:
+  duration: 176
+  route_type: "train"
+  price: 80
+  route_id: 1
+
+rm2:
+  duration: 183
+  route_type: "train"
+  price: 50
+  route_id: 1
+
+
+rm3:
+  duration: 503
+  route_type: "bus"
+  price: 35
+  route_id: 1
+
+rm4:
+  duration: 785
+  route_type: "bus"
+  price: 109
+  route_id: 1
+
+
+rm5:
+  duration: 465
+  route_type: "train"
+  price: 70
+  route_id: 1
+
+rm6:
+  duration: 417
+  route_type: "else"
+  price: 35
+  route_id: 1
+
+rm7:
+  duration: 368
+  route_type: "else"
+  price: 130
+  route_id: 1
+
+rm8:
+  duration: 235
+  route_type: "plane"
+  price: 89
+  route_id: 1
+
+rm9:
+  duration: 288
+  route_type: "plane"
+  price: 106
+  route_id: 1
